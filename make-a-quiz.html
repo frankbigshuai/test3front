@@ -38,8 +38,9 @@
       <div id="quiz"></div>
     </div>
 
+    <script src="configuration.js"></script>
     <script>
-      let host = "http://localhost:8080";
+      let host = configuration.host();
       let questions = [];
       let list = document.getElementById("list");
       let quiz = document.getElementById("quiz");
@@ -51,11 +52,39 @@
       displayTheQuestions();
 
       async function getAll() {
-        let response = await fetch(host + "/questions");
+        const headers = { "Authorization": `Bearer ${configuration.token()}` };
+        let response = await fetch(host + "/questions", { headers });
         let result = await response.json();
         return result;
       }
 
+      const headers = {
+          "Authorization": `Bearer ${configuration.token()}`,
+          //enable CORS
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "apllication/json"
+        };
+        fetch(`${configuration.host()}/questions/${question.id}/image`, { headers })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.blob();
+        })
+        .then((blob) => {
+          // Convert the blob to a data URL
+          const imageUrl = URL.createObjectURL(blob);
+          
+          // Create an <img> element and set its source to the data URL
+          const imgElement = document.getElementById('questionImage');
+          imgElement.src = imageUrl;
+          
+          // Append the <img> element to the document body or another desired location
+          document.body.appendChild(imgElement);
+        })
+        .catch((error) => {
+          console.error('There was a problem with the fetch operation:', error);
+        });
       async function displayTheQuestions() {
         if (questions.length == 0) {
           questions = await getAll();
@@ -80,27 +109,27 @@
           div.className = "card";
           let innerHtml = `
        
-      <img src="http://localhost:8080/questions/${question.id}/image" alt="question" style="width:100%">
-      <div class="container">
-        <h4><b>${question.id}</b></h4> 
-        <p>${question.description}</p>
-        <form>
-            <input type="radio" id="q${question.id}ptionA" name="q2Answer" value="A">
-            <label for="q${question.id}ptionA">${question.choices[0]}</label><br>
+          <img id="questionImage" alt="question" style="width:100%">
+          <div class="container">
+              <h4><b>${question.id}</b></h4> 
+              <p>${question.description}</p>
+              <form>
+                  <input type="radio" id="q${question.id}ptionA" name="q2Answer" value="A">
+                  <label for="q${question.id}ptionA">${question.choices[0]}</label><br>
 
-            <input type="radio" id="q${question.id}ptionB" name="q2Answer" value="B">
-            <label for="q${question.id}ptionB">${question.choices[1]}</label><br>
+                  <input type="radio" id="q${question.id}ptionB" name="q2Answer" value="B">
+                  <label for="q${question.id}ptionB">${question.choices[1]}</label><br>
 
-            <input type="radio" id="q${question.id}ptionC" name="q2Answer" value="C">
-            <label for="q${question.id}ptionC">${question.choices[2]}</label><br>       
-        </form> 
-      </div>
-   
+                  <input type="radio" id="q${question.id}ptionC" name="q2Answer" value="C">
+                  <label for="q${question.id}ptionC">${question.choices[2]}</label><br>       
+              </form> 
+          </div>
           `;
           div.innerHTML = innerHtml;
           list.appendChild(div);
         }
       }
+      
 
       async function saveTheQuiz() {
         let quizTitle = document.getElementById("quizTitle").value;
@@ -111,6 +140,7 @@
           request = {
             method: "POST",
             headers: {
+              "Authorization": `Bearer ${configuration.token()}`,
               "Content-Type": "application/json",
             },
             body: JSON.stringify({"title": quizTitle, "questionIds": quizQuestions}),
@@ -120,6 +150,7 @@
           request = {
             method: "PUT",
             headers: {
+              "Authorization": `Bearer ${configuration.token()}`,
               "Content-Type": "application/json",
             },
             body: JSON.stringify({"id": quizId, "title": quizTitle, "questionIds": quizQuestions}),

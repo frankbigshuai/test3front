@@ -1,7 +1,7 @@
-const mode = 0;
+const mode = 1;
 
 const host_local = "http://localhost:8080";
-const host_remote = "https://ducks-service-???.onrender.com";
+const host_remote = "https://test-3-latest.onrender.com";
 
 function getHost() {
     return (mode == 0) ? host_local : host_remote;
@@ -82,8 +82,8 @@ async function signup() {
 
 
 async function login() {    
-    let username = document.getElementById("username").value;
-    let password = document.getElementById("password").value;
+    let username = document.getElementById("usernameLogin").value;
+    let password = document.getElementById("passwordLogin").value;
     let customer = {username: username, password: password}
     let request = {
         method: "POST",
@@ -114,4 +114,5 @@ async function login() {
 
 async function logout() {   
     removeTheToken();  
+    alert("Logged out successfully!")
 }
