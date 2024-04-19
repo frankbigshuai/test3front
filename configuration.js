@@ -58,6 +58,7 @@ async function signup() {
     let request = {
         method: "POST",
         headers: {
+            "Authorization": "Bearer " + getTheToken(), // "Bearer " + token, // "Bearer " + token,
             "Content-Type": "application/json"
         },
         body: JSON.stringify(customer)
@@ -88,6 +89,7 @@ async function login() {
     let request = {
         method: "POST",
         headers: {
+            "Authorization": "Bearer " + getTheToken(), // "Bearer " + token,
             "Content-Type": "application/json"
         },
         body: JSON.stringify(customer)
