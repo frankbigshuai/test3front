@@ -1,4 +1,4 @@
-const mode = 1;
+const mode = 0;
 
 const host_local = "http://localhost:8080";
 const host_remote = "https://test-3-latest.onrender.com";
@@ -58,7 +58,7 @@ async function signup() {
     let request = {
         method: "POST",
         headers: {
-            "Authorization": "Bearer " + getTheToken(), // "Bearer " + token, // "Bearer " + token,
+          
             "Content-Type": "application/json"
         },
         body: JSON.stringify(customer)
@@ -89,7 +89,7 @@ async function login() {
     let request = {
         method: "POST",
         headers: {
-            "Authorization": "Bearer " + getTheToken(), // "Bearer " + token,
+           
             "Content-Type": "application/json"
         },
         body: JSON.stringify(customer)
